@@ -26,6 +26,20 @@ func NewWaitGroupWrapper() *WaitGroupWrapper{
 	}
 }
 
+func (wg *WaitGroupWrapper)GetResult(id uint64,bPop bool) interface{} {
+	wg.Lock()
+	defer wg.Unlock()
+
+	if i,ok := wg.promise[id];ok {
+		if bPop {
+			delete(wg.promise,id)
+		}
+		return i
+	}
+
+	return nil
+}
+
 func (wg *WaitGroupWrapper) Run(fn interface{},arg... interface{}) (id uint64,done <- chan struct{},err error) {
 	t := reflect.TypeOf(fn)
 	if t.Kind() != reflect.Func {
