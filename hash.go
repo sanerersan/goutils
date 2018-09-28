@@ -6,7 +6,7 @@ import (
 	"reflect"
 )
 
-//try to hash everything
+//try to hash every type you can check wether two types are equal by this
 
 func IsBaseType(t reflect.Type) bool {
 	switch t.Kind() {
@@ -96,7 +96,7 @@ func getDescString(t reflect.Type,recordType map[string]int) string {
 	return "unknown"
 }
 
-func Hash(st interface{}) (shortName string,hash string) {
+func HashType(st interface{}) (shortName string,hash string) {
 	shortName = ""
 	hash = ""
 	if nil == st {
@@ -112,4 +112,22 @@ func Hash(st interface{}) (shortName string,hash string) {
 	}
 	shortName = t.String()
 	return
+}
+
+func IsTypeEqual(st1 interface{},st2 interface{}) bool {
+	if (nil == st1) && (nil == st2) {
+		return true
+	}
+	if (nil == st1) || (nil == st2) {
+		return false
+	}
+
+	sn1,h1 := HashType(st1)
+	sn2,h2 := HashType(st2)
+
+	if (sn1 == sn2) && (h1 == h2) {
+		return true
+	}
+
+	return false
 }
